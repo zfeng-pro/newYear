@@ -1,17 +1,32 @@
 <!--index.wxml-->
-<view class="">
+<view class="page"
+  style="background:url({{cardbg}}); background-size:100% 100%; background-position: 0 0; background-repeat: no-repeat;">
   <view class="title">云拜年罗</view>
-  <!-- <view class="userinfo">
-    <button wx:if="{{!hasUserInfo && canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 获取头像昵称 </button>
+  <view class="userinfo">
+    <!-- <button wx:if="{{!hasUserInfo && canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 获取头像昵称 </button>
     <block wx:else>
       <image class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
       <text class="userinfo-nickname">{{userInfo.nickName}}</text>
-    </block>
+    </block> -->
+  </view>
+  <!-- <view wx:if="{{showAllBg}}" class="usermotto">
+    <text class="user-motto">{{showAllBg}}</text>
   </view> -->
-  <!-- <view class="usermotto">
-    <text class="user-motto">{{motto}}</text>
-  </view> -->
-  <view class='cont' id='canvas-container'>
-    <canvas canvas-id="myCanvas" class="myCanvas" bindlongtap='saveShareImg' />
+  <view wx:if="{{showCanvas}}">
+    <view class='cont' id='canvas-container'>
+      <canvas canvas-id="myCanvas" class="myCanvas" bindlongtap='saveShareImg' />
+    </view>
+  </view>
+  <!-- 选择背景 -->
+  <view>
+    <scroll-view wx:if="{{showAllBg}}" class="all-bg" scroll-y="true">
+      <image class="bg-image" wx:for="{{bgList}}" wx:key="item" src="{{item}}" mode="aspectFit"  bindtap="changeBg" data-bg="{{item}}"></image>
+    </scroll-view>
+  </view>
+  <view class="footer">
+    <view class="green-btn" bindtap="getAllBg">换图</view>
+    <view class="green-btn">换字</view>
+    <view class="green-btn see">预览</view>
+    <view class="green-btn share">分享/拜年</view>
   </view>
 </view>

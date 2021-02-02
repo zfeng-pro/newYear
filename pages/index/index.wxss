@@ -1,4 +1,9 @@
 /**index.wxss**/
+.page{
+  width: 750rpx;
+  height: calc(100vh - 135rpx) ;
+  overflow: hidden;
+}
 .userinfo {
   display: flex;
   flex-direction: column;
@@ -19,7 +24,6 @@
 .usermotto {
   margin-top: 200px;
 }
-
 
 .title{
   padding-top: 60rpx;
@@ -52,10 +56,59 @@
 }
 
 .savePoste {
-  background-color: #BC4B48;
   width: 90%;
   margin-left: auto;
   margin-right: auto;
   margin-top: 30rpx;
   color: #fff;
+}
+
+
+
+/* 底部按键 */
+.footer{
+  width: 750rpx;
+  height: 122rpx;
+  padding-top: 10rpx;
+  padding-bottom: 15rpx;
+  display: flex;
+  border-top: 5rpx solid #04C86F;
+  position: fixed;
+  justify-content: space-around;
+  left: 0;
+  bottom: 0;
+  background-color: #fff;
+}
+.green-btn{
+  background-color: #04C86F;
+  height: 88rpx;
+  width: 144rpx;
+  line-height: 88rpx;
+  color: #ffffff;
+  border-radius: 44rpx;
+  text-align: center;
+}
+.see{
+  width: 180rpx;
+}
+.share{
+  width: 253rpx;
+}
+
+/* 选择背景 */
+.all-bg{
+  width: 750rpx;
+  height: 600rpx;
+  position: fixed;
+  left: 0;
+  bottom: 135rpx;
+  display: flex;
+  justify-content: space-between;
+  background-color: thistle;
+  border-top: 5rpx solid #04C86F;
+}
+.all-bg .bg-image{
+  width: 230rpx;
+  margin: 10rpx;
+  padding: 0;
 }
