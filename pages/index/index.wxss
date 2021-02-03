@@ -1,31 +1,37 @@
 /**index.wxss**/
-.page{
+.page {
   width: 750rpx;
-  height: calc(100vh - 135rpx) ;
+  height: calc(100vh - 135rpx);
+  background-position: center center;
   overflow: hidden;
+  color: #4F0000;
 }
+
+/*头像*/
 .userinfo {
   display: flex;
-  flex-direction: column;
+  padding-top: 30%;
+  padding-left: 100rpx;
   align-items: center;
 }
 
 .userinfo-avatar {
-  width: 128rpx;
-  height: 128rpx;
+  width: 100rpx;
+  height: 100rpx;
   margin: 20rpx;
   border-radius: 50%;
 }
 
 .userinfo-nickname {
-  color: #aaa;
+  color: #4F0000;
 }
 
-.usermotto {
-  margin-top: 200px;
+.bless{
+  padding: 70rpx 120rpx;
+  line-height: 45rpx;
 }
 
-.title{
+.title {
   padding-top: 60rpx;
   height: 60rpx;
   width: 750rpx;
@@ -37,6 +43,8 @@
   font-weight: 600;
   text-align: center;
 }
+
+/* 海报 */
 .cont {
   width: 100%;
   margin: auto;
@@ -66,7 +74,7 @@
 
 
 /* 底部按键 */
-.footer{
+.footer {
   width: 750rpx;
   height: 122rpx;
   padding-top: 10rpx;
@@ -79,7 +87,8 @@
   bottom: 0;
   background-color: #fff;
 }
-.green-btn{
+
+.green-btn {
   background-color: #04C86F;
   height: 88rpx;
   width: 144rpx;
@@ -88,27 +97,80 @@
   border-radius: 44rpx;
   text-align: center;
 }
-.see{
-  width: 180rpx;
+
+.see {
+  width: 140rpx;
+  padding-left: 40rpx;
+  background-image: url('https://vkceyugu.cdn.bspapp.com/VKCEYUGU-0c03b75a-8139-4654-83b3-f12d36df4bbe/5704ea35-bf09-4e3d-8820-a87de4012ae2.png');
+  background-repeat: no-repeat;
+  background-size: 48rpx 42rpx;
+  background-position: 20rpx 25rpx;
 }
-.share{
-  width: 253rpx;
+
+.share {
+  width: 200rpx;
+  padding-left: 53rpx;
+  background-image: url('https://vkceyugu.cdn.bspapp.com/VKCEYUGU-0c03b75a-8139-4654-83b3-f12d36df4bbe/dd758ee7-290b-4dc7-863c-7e7e44a5db02.png');
+  background-repeat: no-repeat;
+  background-size: 48rpx 52rpx;
+  background-position: 20rpx 25rpx;
 }
 
 /* 选择背景 */
-.all-bg{
+.bg{
   width: 750rpx;
-  height: 600rpx;
+  height: 720rpx;
   position: fixed;
   left: 0;
-  bottom: 135rpx;
+  bottom: 155rpx;
+}
+.all-bg {
+  width: 750rpx;
+  height: 720rpx;
   display: flex;
   justify-content: space-between;
-  background-color: thistle;
+  background-color: #ffffff;
   border-top: 5rpx solid #04C86F;
 }
-.all-bg .bg-image{
+
+.all-bg .bg-image {
   width: 230rpx;
   margin: 10rpx;
   padding: 0;
+}
+
+.close-bg {
+  position: absolute;
+  right: 10rpx;
+  top: -65rpx;
+}
+
+/* 关闭按键 */
+.close {
+  width: 60rpx;
+  height: 60rpx;
+  background-image: url('https://vkceyugu.cdn.bspapp.com/VKCEYUGU-0c03b75a-8139-4654-83b3-f12d36df4bbe/63ce5e01-3076-4331-b8a7-65542b5d3cc0.png');
+  background-size: 100% 100%;
+  border-radius: 50%;
+  z-index: 100;
+}
+
+
+/* 选择文本 */
+.my-radio-group{
+  padding: 10rpx 20rpx;
+}
+.my-radio{
+  margin: 20rpx 0;
+  display: flex;
+}
+.radio-l{
+  margin-right: 15rpx;
+}
+.textarea{
+  width: calc(100% - 30rpx);
+  height: 240rpx;
+  padding: 15rpx;
+  background-color: #efefef;
+  border-radius: 8rpx;
 }

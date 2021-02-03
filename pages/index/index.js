@@ -8,35 +8,56 @@ Page({
     userInfo: {},
     hasUserInfo: false,
     canIUse: wx.canIUse('button.open-type.getUserInfo'),
-    bless: '',
+    mybless: '春节快乐！愿你福禄财神紧拥抱，事业顺心顺意！工作顺顺利利！爱情甜甜蜜蜜！滚滚财源广进！',
     showCanvas: false,
     // 二维码
     codeImg: "../../img/codeImg.png",
     bgList: [
-      'https://vkceyugu.cdn.bspapp.com/VKCEYUGU-0c03b75a-8139-4654-83b3-f12d36df4bbe/3a5ec1d6-7a31-4e6f-b60b-aa7f3a0d83d2.png',
-      'https://vkceyugu.cdn.bspapp.com/VKCEYUGU-0c03b75a-8139-4654-83b3-f12d36df4bbe/e3dfcba9-2ab5-4ee4-90af-7c8e66adfbf3.png',
+      'https://vkceyugu.cdn.bspapp.com/VKCEYUGU-0c03b75a-8139-4654-83b3-f12d36df4bbe/870bcc2a-c405-48e7-9ab2-6092cfa5a1ed.jpg',
+      'https://vkceyugu.cdn.bspapp.com/VKCEYUGU-0c03b75a-8139-4654-83b3-f12d36df4bbe/305acc3e-b16c-4bd5-994e-86c051021f8a.jpg',
       'https://vkceyugu.cdn.bspapp.com/VKCEYUGU-0c03b75a-8139-4654-83b3-f12d36df4bbe/ebde0372-be48-4aeb-afc5-40e26937701d.png',
       'https://vkceyugu.cdn.bspapp.com/VKCEYUGU-0c03b75a-8139-4654-83b3-f12d36df4bbe/e94fa668-5738-4dc9-a1b6-dba3b26299a7.png'
+    ],
+    Allbless: [{
+        lable: '春节快乐！愿你福禄财神紧拥抱，事业顺心顺意！工作顺顺利利！爱情甜甜蜜蜜！滚滚财源广进！'
+      },
+      {
+        lable: '志在哪里，哪里就有成功；心在哪里，哪里就有风景；爱在哪里，哪里就有感动。在新年来临之际，衷心祝愿春节快乐，心想事成！'
+      },
+      {
+        lable: '新春佳节到，向你问个好；身体倍健康，心情特别好；好运天天交，口味顿顿妙；家里出黄金，墙上长钞票。'
+      },
+      {
+        lable: '一切的美好源于真挚和坦诚，虽然岁月不会轮回，天真不再重现，一份真诚的祝福，会让你快乐每一天！'
+      },
+
     ],
     cardbg: "https://vkceyugu.cdn.bspapp.com/VKCEYUGU-0c03b75a-8139-4654-83b3-f12d36df4bbe/e94fa668-5738-4dc9-a1b6-dba3b26299a7.png",
     // 用户头像
     headImg: null,
     showAllBg: false,
-
+    choiceText: false,
+    useMybless: false,
   },
   // 事件处理函数
   bindViewTap() {
 
   },
   onLoad() {
+    this.getUserInfo();
+  },
+  // 获取用户信息
+  getUserInfo() {
     let that = this;
-    // 在没有 open-type=getUserInfo 版本的兼容处理
     wx.getUserInfo({
       success: res => {
         app.globalData.userInfo = res.userInfo
         that.userInfo = res.userInfo;
         that.data.userInfo = res.userInfo;
-        console.log(that.userInfo)
+        that.data.hasUserInfo = true;
+        that.setData({
+          hasUserInfo: that.data.hasUserInfo,
+        })
         // 下载头像
         wx.downloadFile({
           url: res.userInfo.avatarUrl,
@@ -44,23 +65,52 @@ Page({
             wx.hideLoading();
             if (res.statusCode === 200) {
               that.data.headImg = res.tempFilePath;
+              that.setData({
+                headImg: that.data.headImg,
+                userInfo: that.data.userInfo
+              })
               // that.getCanvas(that.data.cardbg, that.data.codeImg, res.tempFilePath);
             }
           }
         })
 
       }
-    })
+    }, )
   },
   // 查看全部背景
   getAllBg() {
+    this.data.choiceText = false;
     this.data.showAllBg = !this.data.showAllBg;
     this.setData({
+      choiceText: this.data.choiceText,
       showAllBg: this.data.showAllBg
     })
   },
+
+  // 查看全部祝福语
+  getText() {
+    this.data.showAllBg = false
+    this.data.choiceText = !this.data.choiceText;
+    this.setData({
+      choiceText: this.data.choiceText,
+      showAllBg: this.data.showAllBg
+    })
+  },
+  // 选择祝福语
+  radioChange(e) {
+    if (e.detail.value !=0) {
+      this.data.mybless = e.detail.value
+      this.data.useMybless = false
+    }else{
+      this.data.useMybless = true
+    }
+    this.setData({
+      useMybless:this.data.useMybless,
+      mybless:this.data.mybless
+    })
+  },
   // 更改背景
-  changeBg(e){
+  changeBg(e) {
     let bg = e.currentTarget.dataset['bg'];
     this.data.cardbg = bg;
     this.setData({

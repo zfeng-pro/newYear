@@ -1,31 +1,59 @@
 <!--index.wxml-->
 <view class="page"
-  style="background:url({{cardbg}}); background-size:100% 100%; background-position: 0 0; background-repeat: no-repeat;">
-  <view class="title">云拜年罗</view>
-  <view class="userinfo">
-    <!-- <button wx:if="{{!hasUserInfo && canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 获取头像昵称 </button>
+  style="background:url({{cardbg}});background-size:100% 100%; background-repeat: no-repeat;background-position: center center;">
+  <!-- <view class="title">云拜年罗</view> -->
+  <view>
+    <button wx:if="{{!hasUserInfo}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 获取头像昵称 </button>
     <block wx:else>
-      <image class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
-      <text class="userinfo-nickname">{{userInfo.nickName}}</text>
-    </block> -->
+      <view class="userinfo">
+        <image class="userinfo-avatar" src="{{headImg}}" mode="cover"></image>
+        <text class="userinfo-nickname">{{userInfo.nickName}}</text>
+      </view>
+      <view class="bless">
+        {{mybless}}
+      </view>
+    </block>
   </view>
-  <!-- <view wx:if="{{showAllBg}}" class="usermotto">
-    <text class="user-motto">{{showAllBg}}</text>
-  </view> -->
+  <!-- 海报 -->
   <view wx:if="{{showCanvas}}">
     <view class='cont' id='canvas-container'>
       <canvas canvas-id="myCanvas" class="myCanvas" bindlongtap='saveShareImg' />
     </view>
   </view>
   <!-- 选择背景 -->
-  <view>
-    <scroll-view wx:if="{{showAllBg}}" class="all-bg" scroll-y="true">
-      <image class="bg-image" wx:for="{{bgList}}" wx:key="item" src="{{item}}" mode="aspectFit"  bindtap="changeBg" data-bg="{{item}}"></image>
+  <view class="bg" wx:if="{{showAllBg}}">
+    <view class="close-bg close" bindtap="getAllBg"></view>
+    <scroll-view class="all-bg" scroll-y="true">
+      <image class="bg-image" wx:for="{{bgList}}" wx:key="item" src="{{item}}" mode="aspectFit" bindtap="changeBg"
+        data-bg="{{item}}"></image>
+    </scroll-view>
+  </view>
+  <!-- 选择文本 -->
+  <view class="bg" wx:if="{{choiceText}}">
+    <view class="close-bg close" bindtap="getText"></view>
+    <scroll-view class="all-bg" scroll-y="true">
+      <radio-group class="my-radio-group" bindchange="radioChange">
+        <label>
+          <view class="my-radio">
+            <radio class="radio-l" value="0" checked="true" />
+            <view class="">自己写 / 修改</view>
+          </view>
+          <textarea wx:if="{{useMybless}}" class="textarea" maxlength="120" focus="ture" placeholder="请输入您的祝福语~（最多60字）" value="{{mybless}}">
+
+          </textarea>
+        </label>
+        <label wx:for="{{Allbless}}" wx:key="item">
+          <view class="my-radio">
+            <radio class="radio-l" value="{{item.lable}}"  checked="{{ mybless == item.lable && !useMybless}}" />
+            <view class="">{{item.lable}}</view>
+          </view>
+        </label>
+      </radio-group>
     </scroll-view>
   </view>
   <view class="footer">
     <view class="green-btn" bindtap="getAllBg">换图</view>
-    <view class="green-btn">换字</view>
+    <view class="green-btn" bindtap="getText">换字</view>
     <view class="green-btn see">预览</view>
     <view class="green-btn share">分享/拜年</view>
   </view>
