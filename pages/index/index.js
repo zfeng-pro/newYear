@@ -13,10 +13,12 @@ Page({
     // 二维码
     codeImg: "../../img/codeImg.png",
     bgList: [
-      'https://vkceyugu.cdn.bspapp.com/VKCEYUGU-0c03b75a-8139-4654-83b3-f12d36df4bbe/870bcc2a-c405-48e7-9ab2-6092cfa5a1ed.jpg',
-      'https://vkceyugu.cdn.bspapp.com/VKCEYUGU-0c03b75a-8139-4654-83b3-f12d36df4bbe/305acc3e-b16c-4bd5-994e-86c051021f8a.jpg',
-      'https://vkceyugu.cdn.bspapp.com/VKCEYUGU-0c03b75a-8139-4654-83b3-f12d36df4bbe/ebde0372-be48-4aeb-afc5-40e26937701d.png',
-      'https://vkceyugu.cdn.bspapp.com/VKCEYUGU-0c03b75a-8139-4654-83b3-f12d36df4bbe/e94fa668-5738-4dc9-a1b6-dba3b26299a7.png'
+      'https://vkceyugu.cdn.bspapp.com/VKCEYUGU-0c03b75a-8139-4654-83b3-f12d36df4bbe/60245817-e08f-4cc1-8bfd-1fa1c2cfd6b6.jpg',
+      'https://vkceyugu.cdn.bspapp.com/VKCEYUGU-0c03b75a-8139-4654-83b3-f12d36df4bbe/44a3fea1-48c5-473b-8966-38bf8f00a558.jpg',
+      'https://vkceyugu.cdn.bspapp.com/VKCEYUGU-0c03b75a-8139-4654-83b3-f12d36df4bbe/85c45fa6-602b-4df1-9746-3275e4e4d99a.jpg',
+      'https://vkceyugu.cdn.bspapp.com/VKCEYUGU-0c03b75a-8139-4654-83b3-f12d36df4bbe/291a6d8d-3fc1-4da8-84c2-cba250896daa.jpg',
+      'https://vkceyugu.cdn.bspapp.com/VKCEYUGU-0c03b75a-8139-4654-83b3-f12d36df4bbe/d504af52-5015-4f55-87b2-3e2aeb37abd9.jpg',
+      'https://vkceyugu.cdn.bspapp.com/VKCEYUGU-0c03b75a-8139-4654-83b3-f12d36df4bbe/de613ad0-3659-46b0-aa2e-327a95987e12.jpg'
     ],
     Allbless: [{
         lable: '春节快乐！愿你福禄财神紧拥抱，事业顺心顺意！工作顺顺利利！爱情甜甜蜜蜜！滚滚财源广进！'
@@ -32,12 +34,17 @@ Page({
       },
 
     ],
-    cardbg: "https://vkceyugu.cdn.bspapp.com/VKCEYUGU-0c03b75a-8139-4654-83b3-f12d36df4bbe/e94fa668-5738-4dc9-a1b6-dba3b26299a7.png",
+    cardbg: "https://vkceyugu.cdn.bspapp.com/VKCEYUGU-0c03b75a-8139-4654-83b3-f12d36df4bbe/de613ad0-3659-46b0-aa2e-327a95987e12.jpg",
     // 用户头像
     headImg: null,
     showAllBg: false,
     choiceText: false,
     useMybless: false,
+    focus: true,
+    myblessLength: '0',
+    carImg: '',
+    shareImage:false,
+    Canvas:false,
   },
   // 事件处理函数
   bindViewTap() {
@@ -98,15 +105,27 @@ Page({
   },
   // 选择祝福语
   radioChange(e) {
-    if (e.detail.value !=0) {
+    if (e.detail.value != 0) {
       this.data.mybless = e.detail.value
       this.data.useMybless = false
-    }else{
+    } else {
       this.data.useMybless = true
     }
+    this.data.myblessLength = this.data.mybless.length;
     this.setData({
-      useMybless:this.data.useMybless,
-      mybless:this.data.mybless
+      useMybless: this.data.useMybless,
+      mybless: this.data.mybless,
+      myblessLength: this.data.myblessLength
+    })
+  },
+
+  // 获取自定义祝福语及长度
+  getmyblessLength(e) {
+    this.data.mybless = e.detail.value;
+    this.data.myblessLength = e.detail.value.length;
+    this.setData({
+      mybless: this.data.mybless,
+      myblessLength: this.data.myblessLength,
     })
   },
   // 更改背景
@@ -117,39 +136,59 @@ Page({
       cardbg: this.data.cardbg
     })
   },
-  /**
-   * 开始用canvas绘制分享海报
-   * @param cardbg 下载的海报背景图路径
-   * @param codeImg   下载的二维码图片路径
-   */
-  getCanvas: function (cardbgurl, codeImg, headImg) {
-    let cardbg;
-    // 下载背景
+  // 预览或分享
+  previewImage() {
+    this.data.showAllBg = false
+    this.data.choiceText = false
+    this.data.Canvas = true;
+    this.setData({
+      Canvas: this.data.Canvas,
+      choiceText: this.data.choiceText,
+      showAllBg: this.data.showAllBg
+    })
+    this.showImage(true)
+  },
+  shareMyImage() {
+    this.data.showAllBg = false
+    this.data.choiceText = false
+    this.data.Canvas = true;
+    this.setData({
+      Canvas: this.data.Canvas,
+      choiceText: this.data.choiceText,
+      showAllBg: this.data.showAllBg
+    })
+    this.showImage(false)
+  },
+  // 下载背景
+  showImage(previewOrsave) {
+    let imgdata = this.data;
+    let that = this;
     wx.downloadFile({
-      url: cardbgurl,
+      url: imgdata.cardbg,
       success: function (res) {
         wx.hideLoading();
         if (res.statusCode === 200) {
-          cardbg = res.tempFilePath;
+          let bgImg = res.tempFilePath;
+          that.getCanvas(bgImg, imgdata.codeImg, imgdata.headImg, previewOrsave);
         }
       }
     })
+  },
 
+  /**
+   * 开始用canvas绘制分享海报
+   */
+  getCanvas: function (cardbg, codeImg, headImg, previewOrsave) {
     wx.showLoading({
       title: '正在生成中...',
       mask: true,
     })
     let that = this;
-    let cardBase = that.data.cardBase; //需要绘制的数据集合
-    const ctx = wx.createCanvasContext('myCanvas'); //创建画布
-    let width = "";
+    let ctx = wx.createCanvasContext('myCanvas'); //创建画布
+    ctx.draw()
     wx.createSelectorQuery().select('#canvas-container').boundingClientRect(function (rect) {
-      let height = rect.height;
-      let right = rect.right;
-      width = rect.width * 0.8;
-      let left = rect.left + 5;
       ctx.setFillStyle('#fff');
-      ctx.fillRect(0, 0, rect.width, height);
+      ctx.fillRect(0, 0, 1500, 2668);
       // 这里处理自适应
       let rpx = 1;
       wx.getSystemInfo({
@@ -161,33 +200,45 @@ Page({
       ctx.fillStyle = "#BC4B48"; //填充实体颜色
       //背景图
       if (cardbg) {
-        ctx.drawImage(cardbg, -2 * rpx, -4 * rpx, 379 * rpx, 706 * rpx);
+        ctx.drawImage(cardbg, 0, 0, 375 * rpx, 667 * rpx);
       }
 
       // 内容
+      let txtHeight = 225;
+      let contentTxt = that.data.mybless;
+      let num = Math.ceil(contentTxt.length / 13);
       ctx.setFontSize(15);
-      ctx.setFillStyle('#000');
+      ctx.setFillStyle('#4F0000');
       ctx.setTextAlign('left');
-      ctx.fillText("前端/小程序开发前端/小程序开发前端/小程序开发前端/小程序开发前端/小程序开发前端/小程序开发微信号:qq287534291", 35 * rpx, 415 * rpx, 100 * rpx, 100 * rpx); //姓名
+      for (let i = 0; i < num; i++) {
+        let star = i * 13;
+        let end = (i + 1) * 13;
+        if (end <= contentTxt.length) {
+          let txt = contentTxt.slice(star, end)
+          ctx.fillText(txt, 75 * rpx, (txtHeight + i * 35) * rpx, 250 * rpx, 40 * rpx);
+        } else {
+          let txt = contentTxt.slice(star)
+          ctx.fillText(txt, 75 * rpx, (txtHeight + i * 35) * rpx, 250 * rpx, 40 * rpx);
+        }
+      }
 
 
       //  绘制二维码
-      console.log(codeImg)
       if (codeImg) {
-        ctx.drawImage(codeImg, 165 * rpx, 320 * rpx, 100 * rpx, 100 * rpx)
+        ctx.drawImage(codeImg, 300 * rpx, 570 * rpx, 60 * rpx, 60 * rpx)
       }
 
       // 姓名
       ctx.setFontSize(14);
-      ctx.setFillStyle('#000');
+      ctx.setFillStyle('#4F0000');
       ctx.setTextAlign('left');
-      ctx.fillText(that.userInfo.nickName, 35 * rpx, 355 * rpx, 100 * rpx, 100 * rpx); //姓名
+      ctx.fillText(that.userInfo.nickName, 145 * rpx, 170 * rpx, 80 * rpx, 60 * rpx); //姓名
 
       //头像
-      let avatarurl_width = 60, //绘制的头像宽度
-        avatarurl_heigth = 60, //绘制的头像高度
-        avatarurl_x = 28, //绘制的头像在画布上的位置
-        avatarurl_y = 36; //绘制的头像在画布上的位置
+      let avatarurl_width = 40, //绘制的头像宽度
+        avatarurl_heigth = 40, //绘制的头像高度
+        avatarurl_x = 80, //绘制的头像在画布上的位置
+        avatarurl_y = 120; //绘制的头像在画布上的位置
 
       ctx.save(); // 先保存状态 已便于画完圆再用
       ctx.beginPath(); //开始绘制
@@ -198,13 +249,58 @@ Page({
     }).exec()
 
     setTimeout(function () {
-      ctx.draw();
-      wx.hideLoading();
-    }, 1000)
-
+      ctx.draw(false, function () {
+        wx.canvasToTempFilePath({
+          canvasId: 'myCanvas',
+          success: function (res) {
+            wx.hideLoading();
+            that.data.carImg = res.tempFilePath;
+            that.data.Canvas = false;
+            that.setData({
+              carImg: that.data.carImg,
+              Canvas: that.data.Canvas
+            })
+            if (previewOrsave) {
+              that.showPreview()
+            }else{
+              that.showShare()
+            }
+          },
+        });
+      });
+    }, 500)
   },
-
-
+  // 展示预览
+  showPreview() {
+    let that = this;
+    setTimeout(function () {
+      that.data.showCanvas = true;
+      that.setData({
+        showCanvas: that.data.showCanvas
+      })
+    }, 500)
+  },
+  // 关闭预览
+  closePreview(){
+    this.data.showCanvas = false;
+    this.setData({
+      showCanvas: this.data.showCanvas
+    })
+  },
+  showShare(){
+    let that = this;
+    wx.showShareImageMenu({
+      path:this.data.carImg,
+      complete:res=>{
+        if(that.data.showCanvas == true){
+          that.data.showCanvas = false;
+          that.setData({
+            showCanvas: this.data.showCanvas
+          })
+        }
+      }
+    })
+  },
   //点击保存到相册
   saveShareImg: function () {
     let that = this;
@@ -216,7 +312,6 @@ Page({
       wx.canvasToTempFilePath({
         canvasId: 'myCanvas',
         success: function (res) {
-          console.info("res", res);
           wx.hideLoading();
           let tempFilePath = res.tempFilePath;
           wx.saveImageToPhotosAlbum({

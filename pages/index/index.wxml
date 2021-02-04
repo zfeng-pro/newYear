@@ -3,7 +3,8 @@
   style="background:url({{cardbg}});background-size:100% 100%; background-repeat: no-repeat;background-position: center center;">
   <!-- <view class="title">云拜年罗</view> -->
   <view>
-    <button wx:if="{{!hasUserInfo}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 获取头像昵称 </button>
+    <button class="userinfo-btn" wx:if="{{!hasUserInfo}}" open-type="getUserInfo" bindtap="getUserInfo"> 获取头像昵称
+    </button>
     <block wx:else>
       <view class="userinfo">
         <image class="userinfo-avatar" src="{{headImg}}" mode="cover"></image>
@@ -15,7 +16,7 @@
     </block>
   </view>
   <!-- 海报 -->
-  <view wx:if="{{showCanvas}}">
+  <view wx:if="{{Canvas}}">
     <view class='cont' id='canvas-container'>
       <canvas canvas-id="myCanvas" class="myCanvas" bindlongtap='saveShareImg' />
     </view>
@@ -36,25 +37,39 @@
         <label>
           <view class="my-radio">
             <radio class="radio-l" value="0" checked="true" />
-            <view class="">自己写 / 修改</view>
+            <view class="">自己写/修改</view>
           </view>
-          <textarea wx:if="{{useMybless}}" class="textarea" maxlength="120" focus="ture" placeholder="请输入您的祝福语~（最多60字）" value="{{mybless}}">
-
-          </textarea>
+          <form wx:if="{{useMybless}}" bindsubmit='getmybless' class="textarea-group">
+            <textarea class="textarea" maxlength="120" bindinput="getmyblessLength" focus="{{focus}}"
+              placeholder="请输入您的祝福语~（最多60字）" value="{{mybless}}" />
+            <view class="bless-length"> <text class="green-bless">{{myblessLength}}</text>/60 最多可输入60个汉字</view>
+              <view class='my-btn' bindtap="getText">确定</view>
+          </form>
         </label>
         <label wx:for="{{Allbless}}" wx:key="item">
           <view class="my-radio">
-            <radio class="radio-l" value="{{item.lable}}"  checked="{{ mybless == item.lable && !useMybless}}" />
+            <radio class="radio-l" value="{{item.lable}}" checked="{{ mybless == item.lable && !useMybless}}" />
             <view class="">{{item.lable}}</view>
           </view>
         </label>
       </radio-group>
     </scroll-view>
   </view>
+  <!-- 预览图片 -->
+  <view wx:if="{{showCanvas}}" class="preview-group">
+    <view class="carimg-group">
+      <image src="{{carImg}}" mode="aspectFit" style="height: 100%;"></image>
+    </view>
+      <view class="preview-btn-group">
+        <view class='preview-btn' bindtap="closePreview">重新修改</view>
+        <view class='preview-btn' bindtap="showShare">分享来拜年</view>
+      </view>
+  </view>
+ 
   <view class="footer">
     <view class="green-btn" bindtap="getAllBg">换图</view>
     <view class="green-btn" bindtap="getText">换字</view>
-    <view class="green-btn see">预览</view>
-    <view class="green-btn share">分享/拜年</view>
+    <view class="green-btn see" bindtap="previewImage">预览</view>
+    <view class="green-btn share" bindtap="shareMyImage">分享/拜年</view>
   </view>
 </view>

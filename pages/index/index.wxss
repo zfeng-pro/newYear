@@ -8,9 +8,14 @@
 }
 
 /*头像*/
+.userinfo-btn {
+  margin-top: 35%;
+  margin-left: 100rpx;
+}
+
 .userinfo {
   display: flex;
-  padding-top: 30%;
+  padding-top: 35%;
   padding-left: 100rpx;
   align-items: center;
 }
@@ -26,7 +31,7 @@
   color: #4F0000;
 }
 
-.bless{
+.bless {
   padding: 70rpx 120rpx;
   line-height: 45rpx;
 }
@@ -46,11 +51,14 @@
 
 /* 海报 */
 .cont {
-  width: 100%;
+  width: 750rpx;
   margin: auto;
+  position: fixed;
+  top: -10000rpx;
+  left: 0;
   text-align: center;
-  height: 100vh;
-  background: #BC4B48;
+  height: 1334rpx;
+  background: rgba(0, 0, 0, 0.8);
   border: none;
   overflow: hidden;
 }
@@ -117,13 +125,14 @@
 }
 
 /* 选择背景 */
-.bg{
+.bg {
   width: 750rpx;
   height: 720rpx;
   position: fixed;
   left: 0;
   bottom: 155rpx;
 }
+
 .all-bg {
   width: 750rpx;
   height: 720rpx;
@@ -157,20 +166,110 @@
 
 
 /* 选择文本 */
-.my-radio-group{
+.my-radio-group {
   padding: 10rpx 20rpx;
 }
-.my-radio{
+
+.my-radio {
   margin: 20rpx 0;
   display: flex;
 }
-.radio-l{
+
+.radio-l {
   margin-right: 15rpx;
 }
-.textarea{
+
+.textarea-group {
   width: calc(100% - 30rpx);
-  height: 240rpx;
+  /* height: 340rpx; */
+  display: block;
   padding: 15rpx;
+  padding-bottom: 25rpx;
   background-color: #efefef;
   border-radius: 8rpx;
+}
+
+.textarea {
+  display: block;
+  width: calc(100% - 30rpx);
+  margin: 15rpx;
+  height: 240rpx;
+}
+
+.bless-length {
+  font-size: 22rpx;
+  color: #999999;
+  text-align: right;
+  margin-bottom: 15rpx;
+}
+
+.green-bless {
+  color: #04C86F;
+}
+
+.my-btn {
+  width: 500rpx;
+  height: 60rpx;
+  margin: 0 auto;
+  padding: 10rpx;
+  line-height: 60rpx;
+  color: #ffffff;
+  text-align: center;
+  font-weight: 600;
+  font-size: 30rpx;
+  background-color: #04C86F;
+  border-radius: 40rpx;
+}
+
+/* 预览 */
+.preview-group {
+  width: 750rpx;
+  height: 100vh;
+  margin: auto;
+  position: fixed;
+  top: 0;
+  left: 0;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.8);
+  border: none;
+  overflow: hidden;
+  z-index: 999;
+}
+
+.carimg-group {
+  height: 70vh;
+  margin-top: 40rpx;
+  display: flex;
+  justify-content: center;
+}
+
+.preview-btn-group{
+  display: flex;
+  justify-content: center;
+  margin-top: 20rpx;
+}
+.preview-btn {
+  width: 250rpx;
+  height: 88rpx;
+  margin: 0 10rpx;
+  line-height: 88rpx;
+  text-align: center;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 30rpx;
+  background-color: #04C86F;
+  border-radius: 40rpx;
+}
+
+/* 分享 */
+.share-group{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.item-group{
+  width: 690rpx;
+  height: 610rpx;
+  background-color: #fff;
+  border: 10rpx;
 }
