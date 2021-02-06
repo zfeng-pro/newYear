@@ -8,18 +8,21 @@ Page({
     userInfo: {},
     hasUserInfo: false,
     canIUse: wx.canIUse('button.open-type.getUserInfo'),
+    // 默认祝福语
     mybless: '春节快乐！愿你福禄财神紧拥抱，事业顺心顺意！工作顺顺利利！爱情甜甜蜜蜜！滚滚财源广进！',
     showCanvas: false,
     // 二维码
-    codeImg: "../../img/codeImg.png",
+    codeImg: "../../img/codeImg.jpg",
+    // 背景图列表
     bgList: [
       'https://vkceyugu.cdn.bspapp.com/VKCEYUGU-0c03b75a-8139-4654-83b3-f12d36df4bbe/60245817-e08f-4cc1-8bfd-1fa1c2cfd6b6.jpg',
       'https://vkceyugu.cdn.bspapp.com/VKCEYUGU-0c03b75a-8139-4654-83b3-f12d36df4bbe/44a3fea1-48c5-473b-8966-38bf8f00a558.jpg',
       'https://vkceyugu.cdn.bspapp.com/VKCEYUGU-0c03b75a-8139-4654-83b3-f12d36df4bbe/85c45fa6-602b-4df1-9746-3275e4e4d99a.jpg',
       'https://vkceyugu.cdn.bspapp.com/VKCEYUGU-0c03b75a-8139-4654-83b3-f12d36df4bbe/291a6d8d-3fc1-4da8-84c2-cba250896daa.jpg',
       'https://vkceyugu.cdn.bspapp.com/VKCEYUGU-0c03b75a-8139-4654-83b3-f12d36df4bbe/d504af52-5015-4f55-87b2-3e2aeb37abd9.jpg',
-      'https://vkceyugu.cdn.bspapp.com/VKCEYUGU-0c03b75a-8139-4654-83b3-f12d36df4bbe/de613ad0-3659-46b0-aa2e-327a95987e12.jpg'
+      'https://vkceyugu.cdn.bspapp.com/VKCEYUGU-0c03b75a-8139-4654-83b3-f12d36df4bbe/de613ad0-3659-46b0-aa2e-327a95987e12.jpg',
     ],
+    // 祝福语列表
     Allbless: [{
         lable: '春节快乐！愿你福禄财神紧拥抱，事业顺心顺意！工作顺顺利利！爱情甜甜蜜蜜！滚滚财源广进！'
       },
@@ -34,6 +37,7 @@ Page({
       },
 
     ],
+    // 默认背景图
     cardbg: "https://vkceyugu.cdn.bspapp.com/VKCEYUGU-0c03b75a-8139-4654-83b3-f12d36df4bbe/de613ad0-3659-46b0-aa2e-327a95987e12.jpg",
     // 用户头像
     headImg: null,
@@ -43,46 +47,51 @@ Page({
     focus: true,
     myblessLength: '0',
     carImg: '',
-    shareImage:false,
-    Canvas:false,
+    shareImage: false,
+    Canvas: false,
+    access_token: '',
+    dialogShow: false,
+    oneButton: [{
+      text: '确定'
+    }],
   },
-  // 事件处理函数
-  bindViewTap() {
 
-  },
   onLoad() {
-    this.getUserInfo();
+    this.getUserInfo()
   },
   // 获取用户信息
   getUserInfo() {
-    let that = this;
     wx.getUserInfo({
       success: res => {
-        app.globalData.userInfo = res.userInfo
-        that.userInfo = res.userInfo;
-        that.data.userInfo = res.userInfo;
-        that.data.hasUserInfo = true;
-        that.setData({
-          hasUserInfo: that.data.hasUserInfo,
+        this.data.hasUserInfo = true;
+        this.data.userInfo = res.userInfo;
+        this.data.headImg = res.userInfo.avatarUrl;
+        this.setData({
+          headImg: this.data.headImg,
+          userInfo: this.data.userInfo,
+          hasUserInfo: this.data.hasUserInfo
         })
-        // 下载头像
-        wx.downloadFile({
-          url: res.userInfo.avatarUrl,
-          success: function (res) {
-            wx.hideLoading();
-            if (res.statusCode === 200) {
-              that.data.headImg = res.tempFilePath;
-              that.setData({
-                headImg: that.data.headImg,
-                userInfo: that.data.userInfo
-              })
-              // that.getCanvas(that.data.cardbg, that.data.codeImg, res.tempFilePath);
-            }
-          }
-        })
-
+        this.getHeadImg()
       }
-    }, )
+    })
+  },
+  // 下载头像
+  getHeadImg() {
+    let that = this
+    let imgurl = that.data.headImg.replace('https://thirdwx.qlogo.cn', 'https://wx.qlogo.cn')
+    wx.downloadFile({
+      url: imgurl,
+      success: function (res) {
+        wx.hideLoading();
+        if (res.statusCode === 200) {
+          that.data.headImg = res.tempFilePath;
+          that.setData({
+            headImg: that.data.headImg,
+            userInfo: that.data.userInfo
+          })
+        }
+      }
+    })
   },
   // 查看全部背景
   getAllBg() {
@@ -163,6 +172,7 @@ Page({
   showImage(previewOrsave) {
     let imgdata = this.data;
     let that = this;
+    // that.getCanvas(imgdata.cardbg, imgdata.codeImg, imgdata.headImg, previewOrsave);
     wx.downloadFile({
       url: imgdata.cardbg,
       success: function (res) {
@@ -171,6 +181,18 @@ Page({
           let bgImg = res.tempFilePath;
           that.getCanvas(bgImg, imgdata.codeImg, imgdata.headImg, previewOrsave);
         }
+      },
+      fail: function (res) {
+        wx.showModal({
+          title: '提示',
+          content: '生成图片失败，请重试！',
+          showCancel: false,
+          confirmText: '进入设置',
+          confirmColor: '#576B95',
+          success: modalSuccess => {
+
+          }
+        })
       }
     })
   },
@@ -184,6 +206,8 @@ Page({
       mask: true,
     })
     let that = this;
+
+
     let ctx = wx.createCanvasContext('myCanvas'); //创建画布
     ctx.draw()
     wx.createSelectorQuery().select('#canvas-container').boundingClientRect(function (rect) {
@@ -207,7 +231,7 @@ Page({
       let txtHeight = 225;
       let contentTxt = that.data.mybless;
       let num = Math.ceil(contentTxt.length / 13);
-      ctx.setFontSize(15);
+      ctx.setFontSize(16);
       ctx.setFillStyle('#4F0000');
       ctx.setTextAlign('left');
       for (let i = 0; i < num; i++) {
@@ -215,24 +239,29 @@ Page({
         let end = (i + 1) * 13;
         if (end <= contentTxt.length) {
           let txt = contentTxt.slice(star, end)
-          ctx.fillText(txt, 75 * rpx, (txtHeight + i * 35) * rpx, 250 * rpx, 40 * rpx);
+          ctx.fillText(txt, 80 * rpx, (txtHeight + i * 35) * rpx, 250 * rpx, 40 * rpx);
         } else {
           let txt = contentTxt.slice(star)
-          ctx.fillText(txt, 75 * rpx, (txtHeight + i * 35) * rpx, 250 * rpx, 40 * rpx);
+          ctx.fillText(txt, 80 * rpx, (txtHeight + i * 35) * rpx, 250 * rpx, 40 * rpx);
         }
       }
 
-
+      // 分享
+      ctx.setFontSize(15);
+      ctx.setFillStyle('#FFFFFF');
+      ctx.setTextAlign('left');
+      ctx.fillText('我也要', 230 * rpx, 620 * rpx, 100 * rpx, 30 * rpx);
+      ctx.fillText('扫码写祝福', 210 * rpx, 640 * rpx, 100 * rpx, 40 * rpx);
       //  绘制二维码
       if (codeImg) {
-        ctx.drawImage(codeImg, 300 * rpx, 570 * rpx, 60 * rpx, 60 * rpx)
+        ctx.drawImage(codeImg, 300 * rpx, 590 * rpx, 60 * rpx, 60 * rpx)
       }
 
       // 姓名
-      ctx.setFontSize(14);
+      ctx.setFontSize(15);
       ctx.setFillStyle('#4F0000');
       ctx.setTextAlign('left');
-      ctx.fillText(that.userInfo.nickName, 145 * rpx, 170 * rpx, 80 * rpx, 60 * rpx); //姓名
+      ctx.fillText(that.data.userInfo.nickName, 145 * rpx, 170 * rpx, 80 * rpx, 60 * rpx); //姓名
 
       //头像
       let avatarurl_width = 40, //绘制的头像宽度
@@ -262,7 +291,7 @@ Page({
             })
             if (previewOrsave) {
               that.showPreview()
-            }else{
+            } else {
               that.showShare()
             }
           },
@@ -281,74 +310,65 @@ Page({
     }, 500)
   },
   // 关闭预览
-  closePreview(){
+  closePreview() {
     this.data.showCanvas = false;
     this.setData({
       showCanvas: this.data.showCanvas
     })
   },
-  showShare(){
+  // 分享
+  showShare() {
     let that = this;
+    let access_token = that.data.access_token;
     wx.showShareImageMenu({
-      path:this.data.carImg,
-      complete:res=>{
-        if(that.data.showCanvas == true){
+      path: that.data.carImg,
+      complete: res => {
+        if (that.data.showCanvas == true) {
           that.data.showCanvas = false;
           that.setData({
-            showCanvas: this.data.showCanvas
+            showCanvas: that.data.showCanvas
           })
         }
       }
     })
+    // 验证文本是否违规
+    // wx.request({
+    //   url: 'https://api.weixin.qq.com/wxa/msg_sec_check?access_token=' + access_token,
+    //   data: {
+    //     content: that.data.mybless
+    //   },
+    //   method: 'POST',
+    //   header: {
+    //     'content-type': 'application/json'
+    //   },
+    //   success(res) {
+    //     if (res.data.errmsg) {
+    //       wx.showShareImageMenu({
+    //         path: that.data.carImg,
+    //         complete: res => {
+    //           if (that.data.showCanvas == true) {
+    //             that.data.showCanvas = false;
+    //             that.setData({
+    //               showCanvas: that.data.showCanvas
+    //             })
+    //           }
+    //         }
+    //       })
+    //     } else {
+    //       that.data.dialogShow = true;
+    //       that.data.showCanvas = false;
+    //       that.setData({
+    //         showCanvas: that.data.showCanvas,
+    //         dialogShow: that.data.dialogShow
+    //       })
+    //     }
+      // }
+    // })
   },
-  //点击保存到相册
-  saveShareImg: function () {
-    let that = this;
-    wx.showLoading({
-      title: '正在保存',
-      mask: true,
+  tapDialogButton(e) {
+    this.data.dialogShow = false;
+    this.setData({
+      dialogShow: this.data.dialogShow
     })
-    setTimeout(function () {
-      wx.canvasToTempFilePath({
-        canvasId: 'myCanvas',
-        success: function (res) {
-          wx.hideLoading();
-          let tempFilePath = res.tempFilePath;
-          wx.saveImageToPhotosAlbum({
-            filePath: res.tempFilePath,
-            success(res) {
-              console.info(res);
-              wx.showModal({
-                content: '图片已保存到相册，赶紧晒一下吧~',
-                showCancel: false,
-                confirmText: '好的',
-                confirmColor: '#333',
-                success: function (res) {
-                  if (res.confirm) {}
-                },
-                fail: function (res) {}
-              })
-            },
-            fail: function (res) {
-              console.log(res)
-              if (res.errMsg === "saveImageToPhotosAlbum:fail:auth denied") {
-                console.log("打开设置窗口");
-                wx.openSetting({
-                  success(settingdata) {
-                    console.log(settingdata)
-                    if (settingdata.authSetting["scope.writePhotosAlbum"]) {
-                      console.log("获取权限成功，再次点击图片保存到相册")
-                    } else {
-                      console.log("获取权限失败")
-                    }
-                  }
-                })
-              }
-            }
-          })
-        }
-      });
-    }, 1000);
-  },
-
+  }
 })

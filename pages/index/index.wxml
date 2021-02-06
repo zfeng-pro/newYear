@@ -3,12 +3,15 @@
   style="background:url({{cardbg}});background-size:100% 100%; background-repeat: no-repeat;background-position: center center;">
   <!-- <view class="title">云拜年罗</view> -->
   <view>
-    <button class="userinfo-btn" wx:if="{{!hasUserInfo}}" open-type="getUserInfo" bindtap="getUserInfo"> 获取头像昵称
+    <button class="userinfo-btn" wx:if="{{!hasUserInfo && canIUse}}"  open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 获取头像昵称
     </button>
     <block wx:else>
       <view class="userinfo">
-        <image class="userinfo-avatar" src="{{headImg}}" mode="cover"></image>
-        <text class="userinfo-nickname">{{userInfo.nickName}}</text>
+        <view class="userinfo-avatar">
+          <open-data type="userAvatarUrl"></open-data>
+        </view>
+        <open-data type="userNickName"></open-data>
+        <!-- <text class="userinfo-nickname">{{userInfo.nickName}}</text> -->
       </view>
       <view class="bless">
         {{mybless}}
@@ -65,10 +68,12 @@
         <view class='preview-btn' bindtap="showShare">分享来拜年</view>
       </view>
   </view>
- 
+  <mp-dialog title="提示！" show="{{dialogShow}}" bindbuttontap="tapDialogButton" buttons="{{oneButton}}">
+        <view>内容违规！请修改！</view>
+    </mp-dialog>
   <view class="footer">
-    <view class="green-btn" bindtap="getAllBg">换图</view>
-    <view class="green-btn" bindtap="getText">换字</view>
+    <view class="green-btn {{showAllBg?'orange-bg':''}}" bindtap="getAllBg" >换图</view>
+    <view class="green-btn {{choiceText?'orange-bg':''}}" bindtap="getText">换字</view>
     <view class="green-btn see" bindtap="previewImage">预览</view>
     <view class="green-btn share" bindtap="shareMyImage">分享/拜年</view>
   </view>

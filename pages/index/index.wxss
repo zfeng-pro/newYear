@@ -25,6 +25,7 @@
   height: 100rpx;
   margin: 20rpx;
   border-radius: 50%;
+  overflow: hidden;
 }
 
 .userinfo-nickname {
@@ -122,6 +123,9 @@
   background-repeat: no-repeat;
   background-size: 48rpx 52rpx;
   background-position: 20rpx 25rpx;
+}
+.orange-bg{
+  background-color: #FA6400;
 }
 
 /* 选择背景 */
